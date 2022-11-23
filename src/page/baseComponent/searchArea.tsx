@@ -1,5 +1,5 @@
-import React from 'react';
-import '../../style/baseComponentStyle/searchAreaStyle.css';
+import React from "react";
+import "../../style/baseComponentStyle/searchAreaStyle.css";
 
 /** SearchAreaコンポーネント */
 export default function SearchArea() {

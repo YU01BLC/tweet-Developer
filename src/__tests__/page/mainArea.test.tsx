@@ -1,12 +1,12 @@
-import { render, screen } from '@testing-library/react';
-import { unmountComponentAtNode } from 'react-dom';
-import { act } from 'react-dom/test-utils';
-import MainArea from '../../page/baseComponent/mainArea';
+import { render, screen } from "@testing-library/react";
+import { unmountComponentAtNode } from "react-dom";
+import { act } from "react-dom/test-utils";
+import MainArea from "../../page/baseComponent/mainArea";
 
 let container: any = null;
 beforeEach(() => {
   // setup a DOM element as a render target
-  container = document.createElement('div');
+  container = document.createElement("div");
   document.body.appendChild(container);
 });
 
@@ -17,8 +17,8 @@ afterEach(() => {
   container = null;
 });
 
-describe('初回レンダリング時', () => {
-  test('ダミーArea「プロフィール表示エリア」を示すテキスト', () => {
+describe("初回レンダリング時", () => {
+  test("ダミーArea「プロフィール表示エリア」を示すテキスト", () => {
     act(() => {
       render(<MainArea />, container);
     });
@@ -29,11 +29,20 @@ describe('初回レンダリング時', () => {
     expect(textElement).toBeInTheDocument();
   });
 
-  test('ダミーArea「TL表示エリア」を示すテキスト', () => {
+  test("ダミーArea「TL表示エリア」を示すテキスト", () => {
     act(() => {
       render(<MainArea />, container);
     });
     const textElement = screen.getByText(/TL表示エリア/iu);
+    screen.debug(textElement);
+    expect(textElement).toBeInTheDocument();
+  });
+
+  test("ダミーArea「TabContents表示エリア」を示すテキスト", () => {
+    act(() => {
+      render(<MainArea />, container);
+    });
+    const textElement = screen.getByText(/TabContents表示エリア/iu);
     screen.debug(textElement);
     expect(textElement).toBeInTheDocument();
   });

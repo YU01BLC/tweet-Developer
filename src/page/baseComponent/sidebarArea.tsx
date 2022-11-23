@@ -1,5 +1,5 @@
-import React from 'react';
-import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+import React from "react";
+import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 
 /** MainAreaコンポーネント */
 export default function SidebarArea() {

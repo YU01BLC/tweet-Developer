@@ -1,4 +1,56 @@
+/** 最上位要素ラップクラス*/
 .main-wrapper {
-  background-color: pink;
   margin: 10px;
+  max-width: 50%;
+}
+
+/** timeline要素ラップクラス*/
+.main-wrapper--timeline {
+  background-color: lightgray;
+}
+
+/** timelineコンテンツラップクラス*/
+.timeline-contents {
+  border: solid 1px;
+  margin-bottom: 10px;
+  padding: 0 10px;
+}
+
+/** timeline内imageラップ用クラス*/
+.image-contents {
+  text-align: center;
+}
+
+/** timeline内image用クラス*/
+.image-contents--single {
+  max-width: 80%;
+  height: auto;
+}
+
+/** timeline内image複数verラップ用クラス*/
+.image-contents--wrapper {
+  display: flex;
+  overflow-x: scroll;
+}
+
+/** timeline内image複数ver用クラス*/
+.image-contents--mulch {
+  max-width: 50%;
+  height: auto;
+  margin-left: 10px;
+}
+
+.timeline-contents--statusBar {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10px;
+  align-items: center;
+}
+
+.timeline-statusBar--retweet {
+  margin-right: 10px;
+}
+
+.timeline-statusBar--favorite {
+  margin-right: 20px;
 }
