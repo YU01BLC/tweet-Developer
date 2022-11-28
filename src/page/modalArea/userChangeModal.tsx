@@ -9,7 +9,7 @@ import {
 } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { UserType, UserInfoType } from "../../../index";
+import { UserType, UserInfoType } from "../../../@types/index";
 import { deleteTimeline, deleteUserInfo } from "../../common/deleteTimeline";
 import db from "../../firebase";
 import userChangeState from "../../state/atoms/userChangeAtom";
@@ -173,6 +173,7 @@ export default function UserChangeModal() {
             retweet: doc.data().retweet as string,
             tweet: doc.data().tweet as string,
             media: doc.data().media as string,
+            video: doc.data().video as string,
             userId: doc.data().user_id as string,
             userName: doc.data().user_name as string,
             tweetTime: doc.data().tweet_time as Timestamp,
