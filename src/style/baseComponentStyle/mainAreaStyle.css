@@ -40,6 +40,31 @@
   margin-left: 10px;
 }
 
+/** timeline内videoラップ用クラス*/
+.video-contents {
+  text-align: center;
+  position: relative;
+}
+
+/** timeline内video用クラス*/
+.video-contents--item {
+  max-width: 80%;
+  height: auto;
+  opacity: 0.45;
+  border: solid gray;
+  max-height: 500px;
+}
+
+/** timeline内video再生アイコン用クラス*/
+.video-contents--icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+}
+
 .timeline-contents--statusBar {
   display: flex;
   justify-content: flex-end;
