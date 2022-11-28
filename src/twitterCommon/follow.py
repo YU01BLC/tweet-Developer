@@ -8,9 +8,9 @@ api = createAuthInfo.execute()
 twitter_id = 'PiPiPi__PiEN___'
 
 # 検索キーワードと件数
-query = "#バイク女子と繋がりたい -filter:retweets" # -filter:retweetsリツイートを除外するオプション
+query = "#相互 -filter:retweets" # -filter:retweetsリツイートを除外するオプション
 count = 500
-fix_count = 10
+fix_count = 50
 
 try_count = 0
 follow_count = 0
