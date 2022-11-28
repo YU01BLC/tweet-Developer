@@ -40,6 +40,7 @@ module.exports = {
   },
   rules: {
     'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/no-var-requires': 0,
     'import/extensions': [
       'error',
       {

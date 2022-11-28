@@ -5,7 +5,7 @@ from userTimeline import timeline
 from myTimeline import my_timeline
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
-CORS(app, origins=["http://localhost:19006", "http://127.0.0.1:5000", "http://127.0.0.1:5000/user_timeline"])
+CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:5000", "http://127.0.0.1:5000/user_timeline"])
 
 @app.after_request
 def after_request(response):

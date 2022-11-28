@@ -14,6 +14,7 @@ export type UserInfoType = {
   retweet: string;
   tweet: string;
   media: string;
+  video: string;
   userId: string;
   userName: string;
   tweetTime: Timestamp;
