@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { UserType, UserInfoType } from "../../../index";
+import { UserType, UserInfoType } from "../../../@types/index";
 
 /** UserChangeModal表示制御Atom */
 export const myTimelineFlgState = atom<boolean>({
