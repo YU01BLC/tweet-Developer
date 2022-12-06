@@ -1,12 +1,12 @@
-import { render, screen } from "@testing-library/react";
-import { unmountComponentAtNode } from "react-dom";
-import { act } from "react-dom/test-utils";
-import SearchArea from "../../page/baseComponent/searchArea";
+import { render, screen } from '@testing-library/react';
+import { unmountComponentAtNode } from 'react-dom';
+import { act } from 'react-dom/test-utils';
+import SearchArea from '../../page/baseComponent/searchArea';
 
 let container: any = null;
 beforeEach(() => {
   // setup a DOM element as a render target
-  container = document.createElement("div");
+  container = document.createElement('div');
   document.body.appendChild(container);
 });
 
@@ -17,8 +17,8 @@ afterEach(() => {
   container = null;
 });
 
-describe("初回レンダリング時", () => {
-  test("ダミーArea「検索バー表示エリア」を示すテキスト", () => {
+describe('初回レンダリング時', () => {
+  test('ダミーArea「検索バー表示エリア」を示すテキスト', () => {
     act(() => {
       render(<SearchArea />, container);
     });
@@ -29,7 +29,7 @@ describe("初回レンダリング時", () => {
     expect(textElement).toBeInTheDocument();
   });
 
-  test("ダミーArea「トレンド表示エリア」を示すテキスト", () => {
+  test('ダミーArea「トレンド表示エリア」を示すテキスト', () => {
     act(() => {
       render(<SearchArea />, container);
     });
