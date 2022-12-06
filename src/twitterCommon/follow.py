@@ -8,7 +8,7 @@ api = createAuthInfo.execute()
 twitter_id = 'PiPiPi__PiEN___'
 
 # 検索キーワードと件数
-query = "#相互 -filter:retweets" # -filter:retweetsリツイートを除外するオプション
+query = "#フォロバ -filter:retweets" # -filter:retweetsリツイートを除外するオプション
 count = 500
 fix_count = 50
 
