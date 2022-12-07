@@ -1,0 +1,95 @@
+@media screen and (max-width: 500px) {
+  .input-Wrapper {
+    flex-direction: column;
+  }
+}
+/** 最上位要素ラップクラス*/
+.userTimeline-wrapper {
+  margin: 0 10px;
+  padding: 0 20px 10px;
+  background-color: lightgray;
+  border: solid 1px;
+}
+
+/** modal上部ボタン要素ラップクラス */
+.button-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+/** modalボタンベースクラス */
+.button-style {
+  padding: 2px 6px;
+  cursor: pointer;
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s;
+  border-radius: 0.2rem;
+}
+
+/** modal閉じるボタンhoverクラス */
+.button-style--closeButton:hover {
+  color: lightgray;
+  background: red;
+}
+
+/** modal要素追加ボタンhoverクラス */
+.button-style--addButton:hover {
+  color: lightgray;
+  background: skyblue;
+}
+
+/** modalTimeLine切り替えボタンクラス */
+.button-style--tlChangeButton {
+  width: 130px;
+  text-align: center;
+}
+
+/** modalTimeLine切り替えボタンhoverクラス */
+.button-style--tlChangeButton:hover {
+  color: lightgray;
+  background: #ff7321;
+}
+
+/** modalContents追加Areaラップクラス */
+.input-Wrapper {
+  display: flex;
+  justify-content: space-around;
+}
+
+/** modalContentsAreaクラス */
+.input-contents {
+  display: flex;
+}
+
+/** modalContents要素クラス */
+.input-contents--item {
+  height: 24px;
+  margin: 14px 0 0 10px;
+  padding-right: 5%;
+}
+
+/** modalContents要素accountName用クラス */
+.input-label--accountName {
+  width: 70px;
+}
+
+/** modalContents要素accountId用クラス */
+.input-label--accountId {
+  width: 100px;
+}
+
+/** userアカウント情報要素ラップクラス*/
+.userInfo-wrapper {
+  position: relative;
+  padding: 0 10px;
+  margin: 10px 0;
+  border: 1px solid;
+  display: flex;
+}
+
+/** userアカウント情報削除ボタンクラス*/
+.userInfo-removeIcon {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
