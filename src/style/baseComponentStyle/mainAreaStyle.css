@@ -1,7 +1,6 @@
 /** 最上位要素ラップクラス*/
 .main-wrapper {
-  margin: 10px;
-  max-width: 50%;
+  margin: 0 10px;
 }
 
 /** timeline要素ラップクラス*/
@@ -35,7 +34,7 @@
 
 /** timeline内image複数ver用クラス*/
 .image-contents--mulch {
-  max-width: 50%;
+  max-width: 80%;
   height: auto;
   margin-left: 10px;
 }
