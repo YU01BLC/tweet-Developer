@@ -3,7 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
     mocha: true,
-    jest: true
+    jest: true,
   },
   extends: [
     'plugin:react/recommended',
@@ -14,29 +14,29 @@ module.exports = {
     // 'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:@typescript-eslint/recommended-requiring-type-checking',
-    'prettier'
+    'prettier',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaFeatures: {
-      jsx: true
+      jsx: true,
     },
     ecmaVersion: 12,
     sourceType: 'module',
-    project: './tsconfig.json'
+    project: './tsconfig.json',
   },
   plugins: ['react', '@typescript-eslint', 'import'],
   settings: {
     react: {
-      version: 'detect'
+      version: 'detect',
     },
     'import/resolver': {
       node: {
         paths: ['src'],
-        extensions: ['.js', '.jsx', '.ts', '.tsx']
-      }
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
     },
-    'import/extenstions': ['.js', '.jsx', '.ts', '.tsx']
+    'import/extenstions': ['.js', '.jsx', '.ts', '.tsx'],
   },
   rules: {
     'react/react-in-jsx-scope': 'off',
@@ -47,51 +47,43 @@ module.exports = {
         js: 'never',
         jsx: 'never',
         ts: 'never',
-        tsx: 'never'
-      }
+        tsx: 'never',
+      },
     ],
     'react/jsx-filename-extension': [
       'error',
       {
-        extensions: ['.jsx', '.tsx']
-      }
+        extensions: ['.jsx', '.tsx'],
+      },
     ],
     'no-void': [
       'error',
       {
-        allowAsStatement: true
-      }
+        allowAsStatement: true,
+      },
     ],
     'import/order': [
       'error',
       {
-        groups: [
-          'builtin',
-          'external',
-          'parent',
-          'sibling',
-          'index',
-          'object',
-          'type'
-        ],
+        groups: ['builtin', 'external', 'parent', 'sibling', 'index', 'object', 'type'],
         pathGroups: [
           {
             pattern: '{react,react-dom/**,react-router-dom}',
             group: 'builtin',
-            position: 'before'
+            position: 'before',
           },
           {
             pattern: '@src/**',
             group: 'parent',
-            position: 'before'
-          }
+            position: 'before',
+          },
         ],
         pathGroupsExcludedImportTypes: ['builtin'],
         alphabetize: {
-          order: 'asc'
+          order: 'asc',
         },
-        'newlines-between': 'always'
-      }
+        'newlines-between': 'always',
+      },
     ],
     /**
      * 変数をまとめて宣言するのを禁止するルール(デフォルトは許可)
@@ -103,6 +95,8 @@ module.exports = {
      * 開発中に制限に引っ掛かりがちなのでwarnにとどめる
      */
     'prefer-const': 'warn',
+    /**一重引用符を含まないすべての JSX 属性値に対して一重引用符の使用しなければいけない */
+    'jsx-quotes': ['error', 'prefer-single'],
     /**
      * 複数行コメントを書く時には // ではなく /** にしなければいけない。
      * 無効化
@@ -188,21 +182,13 @@ module.exports = {
       'warn',
       {
         /** ファイル種別に応じてimport順を変更 */
-        groups: [
-          'builtin',
-          'external',
-          'internal',
-          ['parent', 'sibling'],
-          'index',
-          'object',
-          'type'
-        ],
+        groups: ['builtin', 'external', 'internal', ['parent', 'sibling'], 'index', 'object', 'type'],
         /** importの改行処理　無効 */
         'newlines-between': 'never',
         /** アルファベット順に並び替える */
         alphabetize: {
           order: 'asc',
-          caseInsensitive: false
+          caseInsensitive: false,
         },
         /** パターンマッチしたものをグループにする */
         pathGroups: [
@@ -210,12 +196,12 @@ module.exports = {
             /** react関連をexternalより上に配置 */
             pattern: 'react',
             group: 'external',
-            position: 'before'
-          }
+            position: 'before',
+          },
         ],
         /**　未割り当てのimportをimportブロックの内部に含めるようにする */
-        warnOnUnassignedImports: true
-      }
+        warnOnUnassignedImports: true,
+      },
     ],
     /**
      * 変数名は2文字以上なければならない。
@@ -225,6 +211,6 @@ module.exports = {
     /** 末尾のスペースを許容しない */
     'no-trailing-spaces': 'warn',
     /** レギュラーな空白意外許容しない */
-    'no-irregular-whitespace': 'error'
-  }
+    'no-irregular-whitespace': 'error',
+  },
 };

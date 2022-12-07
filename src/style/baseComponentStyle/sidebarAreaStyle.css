@@ -1,0 +1,9 @@
+/** 最上位要素ラップクラス*/
+.sidebar-wrapper {
+  margin-top: 2px;
+}
+
+.sidebar-contents {
+  position: fixed;
+  width: 18%;
+}
