@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { UserInfoType } from '../../../@types/index';
+import { UserInfoType, ProfileType } from '../../../@types/index';
 
 /** UserChangeModal表示制御Atom */
 export const myTimelineGetFlgState = atom<boolean>({
@@ -13,9 +13,16 @@ export const userTimelineState = atom<UserInfoType[]>({
   default: [],
 });
 
+/** 表示するuserのprofile用Atom */
+export const profileState = atom<ProfileType[]>({
+  key: 'PROFILE_FLG',
+  default: [],
+});
+
 export const myTimelineState = {
   userTimelineState,
   myTimelineGetFlgState,
+  profileState,
 };
 
 export default myTimelineState;
