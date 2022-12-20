@@ -2,14 +2,14 @@ import Axios from 'axios';
 import { collection, getDocs, query, orderBy, addDoc, Timestamp } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { UserType, UserInfoType } from '../../../@types/index';
-import { deleteTimeline, deleteUserInfo } from '../../common/deleteTimeline';
+import { UserType, UserInfoType, ProfileType } from '../../../@types/index';
+import { deleteTimeline, deleteUserInfo, deleteProfile } from '../../common/deleteTimeline';
 import db from '../../firebase';
 import removeIcon from '../../image/delete.png';
 import modalChangeState from '../../state/atoms/modalFlagAtom';
 import myTimelineState from '../../state/atoms/myTimelineAtom';
 import userChangeState from '../../state/atoms/userChangeAtom';
-import '../../style/baseComponentStyle/modalAreaStyle/userChangeStyle.css';
+import '../../style/modalAreaStyle/userChangeStyle.css';
 
 /** TL切り替え用モーダルコンポーネント */
 export default function UserChangeModal() {
@@ -37,6 +37,11 @@ export default function UserChangeModal() {
    */
   const [accountId, setAccountId] = useState<string>('');
 
+  /** エラーメッセージ用 localState
+   * @type {string} python側に送るアカウント情報が誤っていた時にcatchしたメッセージ保持State
+   */
+  const [errorText, setErrorText] = useState<string>('');
+
   /** TL切り替えbutton表示判定localState
    * @type {boolean} TL切り替えbutton表示判定Flg
    * @description
@@ -53,6 +58,11 @@ export default function UserChangeModal() {
    * ・false: 非表示
    */
   const [userChangeFlg, setUserChangeFlg] = useRecoilState(modalChangeState.userChangeAreaFlgState);
+
+  /** profile情報用RecoilState
+   * @type {profileType[]}
+   */
+  const setProfile = useSetRecoilState<ProfileType[]>(myTimelineState.profileState);
 
   /** TL切り替え対象ユーザ表示用RecoilState
    * @type {UserType[]} モーダル内TL対象ユーザ名表示State
@@ -120,8 +130,12 @@ export default function UserChangeModal() {
 
   /** DB_timeline_data取得準備処理*/
   const catUserName = (user: UserType) => {
+    /** 新しいプロフィール情報を取得する前に、古いプロフィール情報を削除する */
+    deleteProfile();
     /** 新しいTL情報を取得する前に、古いTL情報を削除する */
     deleteTimeline();
+    /** アカウント選択時に一度stateに保持しているerrorメッセージ情報を削除する */
+    setErrorText('');
 
     console.log(user);
     /** 選択したユーザ情報に基づいたTLを取得するためにPython側にaccountId/accountNameを渡す */
@@ -135,6 +149,8 @@ export default function UserChangeModal() {
         if (Axios.isAxiosError(error) && error.response && error.response.status === 400) {
           console.log(error.message);
         }
+        /** アカウント情報が誤っている場合、以下の文言を出力 */
+        setErrorText('選択したアカウントの情報が誤っています。');
       });
     /** TL情報を指定件数全て取得した後にTL切り替え処理を流すためにTL情報取得時間を稼ぐ
      * (ネット環境次第で遅延秒数を増やした方が良いかもしれない)
@@ -147,8 +163,13 @@ export default function UserChangeModal() {
 
   /** DB_timeline_data削除処理*/
   const refUserInfo = (user: UserType) => {
+    /** アカウント削除時に一度stateに保持しているerrorメッセージ情報を削除する */
+    setErrorText('');
+    /** TL切り替えボタンを非表示する */
+    setConfirmFlg(false);
     console.log(user);
     const info = user.docId;
+    /** 削除対象のuser情報を削除処理に渡す */
     deleteUserInfo(info);
     setTimeout(() => {
       getUser();
@@ -188,6 +209,8 @@ export default function UserChangeModal() {
     );
     /** TL切り替えボタンを非表示にする */
     setConfirmFlg(false);
+    /** 一度取得していたｐロフィール情報を空にする */
+    deleteProfile();
     /** 一度取得していたTL情報を空にする(以下処理でAtomを更新を行い、再度TL情報を取得するため) */
     deleteTimeline();
     /** 古いTL情報を削除する処理を全て行った後に自身のTL情報取得する処理を行いたいため遅延処理を噛ませる */
@@ -197,6 +220,37 @@ export default function UserChangeModal() {
       /** MyTimeline表示Flgを立てる */
       setMyTimelineAreaFlg(true);
     }, 500);
+  };
+
+  /** userのプロフィール情報取得処理
+   * @returns {profileType[]} dataList(DB,my_timeline_dataに格納している値)
+   */
+  const catProfileInfo = () => {
+    const collectionRef = collection(db, 'profile_data');
+    const queryRef = query(collectionRef);
+    getDocs(queryRef).then(
+      (querySnapshot) => {
+        const dataList: ProfileType[] = [];
+        querySnapshot.docs.map((doc) => {
+          const resList: ProfileType = {
+            docId: doc.id,
+            userName: doc.data().user_name as string,
+            description: doc.data().user_description as string,
+            icon: doc.data().user_icon as string,
+            banner: doc.data().user_banner as string,
+          };
+          return dataList.push(resList);
+        });
+        setProfile(dataList);
+        console.log('responseProfileData', dataList);
+      },
+      (querySnapshot) => {
+        console.log(querySnapshot);
+      }
+    );
+    /** プロフィール情報を取得後にDBのプロフィール情報を削除する */
+    deleteProfile();
+    catUserTimeLine();
   };
 
   useEffect(() => {
@@ -212,6 +266,8 @@ export default function UserChangeModal() {
             <p
               className='button-style button-style--closeButton'
               onClick={() => {
+                /** userChangeModal非表示時にstateに保持しているerrorメッセージ情報を削除する */
+                setErrorText('');
                 /** userChangeModal非表示時にアカウントID用ローカルステートをクリアする */
                 setAccountId('');
                 /** userChangeModal非表示時アカウント名用ローカルステートをクリアする */
@@ -274,6 +330,7 @@ export default function UserChangeModal() {
                   <img src={removeIconUrl} alt='ユーザ削除ボタン' className='userInfo-removeIcon' />
                 </div>
                 <div
+                  className='userInfo-list'
                   onClick={() => {
                     /** 選択したuserTimeline情報を取得する */
                     catUserName(user);
@@ -285,14 +342,19 @@ export default function UserChangeModal() {
               </div>
             ))}
           </div>
+          {errorText.length > 1 && (
+            <div>
+              <p className='error-text'>{errorText}</p>
+            </div>
+          )}
 
-          {confirmFlg && (
+          {confirmFlg && errorText.length < 1 && (
             <div>
               <p
                 className='button-style button-style--tlChangeButton'
                 onClick={() => {
                   /** 選択したuserTimelineを表示する */
-                  catUserTimeLine();
+                  catProfileInfo();
                 }}
               >
                 TLを切り替える
