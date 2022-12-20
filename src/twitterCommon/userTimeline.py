@@ -2,11 +2,13 @@
 import tweepy
 import createAuthInfo
 from getRespons import execute_user_timeline
+from getRespons import execute_user_profile
 from datetime import timedelta
 import datetime
 
 api = createAuthInfo.execute()
 db_ref = execute_user_timeline()
+db_ref_prof = execute_user_profile()
 
 # 実行回数
 count = 300
@@ -16,6 +18,26 @@ params = {
   "exclude_replies": True,    # リプライ(返信)を含まないかどうか(Trueで含まない)
   "include_rts": False         # リツイートを含むかどうか
 }
+
+def user_profile(account_id):
+  user = api.get_user(screen_name = account_id)
+  banner = api.get_profile_banner(screen_name = account_id)
+
+  banner_image = banner['sizes']['web']['url']
+  print(user.name)
+  print(banner['sizes']['ipad_retina']['url'])
+  # --> Twitter
+  print(user.description)
+  # --> What’s happening?!
+  print(user.profile_image_url_https)
+  
+  db_ref_prof.document().set({
+    'user_name': user.name,
+    'user_description': user.description,
+    'user_icon': user.profile_image_url_https,
+    'user_banner': banner_image
+  })
+  return timeline(account_id)
 
 def timeline(account_id):
   media_list = [];

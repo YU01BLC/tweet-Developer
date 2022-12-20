@@ -1,8 +1,9 @@
 from flask import Flask
 from flask import request, make_response, jsonify
 from flask_cors import CORS
-from userTimeline import timeline
-from myTimeline import my_timeline
+from userTimeline import user_profile
+from myTimeline import my_profile
+
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
 CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:5000", "http://127.0.0.1:5000/user_timeline"])
@@ -30,11 +31,11 @@ def index():
 def post_timeline():
     data = request.get_json()
     account_id = data['accountId']
-    return timeline(account_id)
+    return user_profile(account_id)
 
 @app.route("/my_timeline", methods=['GET','POST'])
 def post_my_timeline():
-    return my_timeline()
+    return my_profile()
 
 if __name__ == "__main__":
     app.debug = True

@@ -2,25 +2,27 @@ import Axios from 'axios';
 import { collection, getDocs, query, orderBy, Timestamp } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
-import { UserInfoType } from '../../../@types/index';
-import { deleteMyTimeline } from '../../common/deleteTimeline';
+import { UserInfoType, ProfileType } from '../../../@types/index';
+import { deleteMyTimeline, deleteMyProfile } from '../../common/deleteTimeline';
 import db from '../../firebase';
 import videoIcon from '../../image/video_start.png';
+import nullIcon from '../../image/null_icon.png';
 import modalChangeState from '../../state/atoms/modalFlagAtom';
 import myTimelineState from '../../state/atoms/myTimelineAtom';
 import '../../style/baseComponentStyle/mainAreaStyle.css';
 
 /** MainAreaコンポーネント */
 export default function MainArea() {
-  const myTimelineAreaFlg = useRecoilValue<boolean>(modalChangeState.myTimelineAreaFlgState);
-
-  const videoIconUrl: string = videoIcon;
-
   /** myTimeline表示判定RecoilState
    * @type {boolean}
    * @description
    * ・true: 表示
    * ・false: 非表示
+   */
+  const myTimelineAreaFlg = useRecoilValue<boolean>(modalChangeState.myTimelineAreaFlgState);
+
+  /** timeline再取得用RecoilState
+   * @type {boolean} 当該stateが更新された時にtimeline情報再取得処理が走る
    */
   const getMyTimelineFlg = useRecoilValue<boolean>(myTimelineState.myTimelineGetFlgState);
 
@@ -28,6 +30,16 @@ export default function MainArea() {
    * @type {UserInfoType[]}
    */
   const [timeline, setTimeline] = useRecoilState<UserInfoType[]>(myTimelineState.userTimelineState);
+
+  /** profile情報用RecoilState
+   * @type {profileType[]}
+   */
+  const [profile, setProfile] = useRecoilState<ProfileType[]>(myTimelineState.profileState);
+
+  /** 動画再生ボタンの画像URL情報を変数に代入 */
+  const videoIconUrl: string = videoIcon;
+  /** プロフィールアイコンがnullの時に表示するよう画像URL情報を変数に代入 */
+  const nullIconUrl: string = nullIcon;
 
   /** 自分のTL情報取得処理
    * @returns {UserInfoType[]} dataList(DB,my_timeline_dataに格納している値)
@@ -59,14 +71,46 @@ export default function MainArea() {
         console.log(querySnapshot);
       }
     );
+    /** 取得したtimeline情報をDBから削除する。 */
     deleteMyTimeline();
+  };
+
+  /** 自分のプロフィール情報取得処理
+   * @returns {profileType[]} dataList(DB,my_timeline_dataに格納している値)
+   */
+  const catProfileInfo = () => {
+    const collectionRef = collection(db, 'my_profile_data');
+    const queryRef = query(collectionRef);
+    getDocs(queryRef).then(
+      (querySnapshot) => {
+        const dataList: ProfileType[] = [];
+        querySnapshot.docs.map((doc) => {
+          const resList: ProfileType = {
+            docId: doc.id,
+            userName: doc.data().user_name as string,
+            description: doc.data().user_description as string,
+            icon: doc.data().user_icon as string,
+            banner: doc.data().user_banner as string,
+          };
+          return dataList.push(resList);
+        });
+        setProfile(dataList);
+        console.log('responseProfileData', dataList);
+      },
+      (querySnapshot) => {
+        console.log(querySnapshot);
+      }
+    );
+    /** 取得したプロフィール情報をDBから削除する。 */
+    deleteMyProfile();
+    catUserTimeLine();
   };
 
   useEffect(() => {
     Axios.post('http://127.0.0.1:5000/my_timeline')
       .then((response) => {
         console.log(response);
-        catUserTimeLine();
+        catProfileInfo();
       })
       .catch((error) => {
         console.log('catch', error);
@@ -78,12 +122,42 @@ export default function MainArea() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getMyTimelineFlg]);
 
+  /**ErrorBoundary確認用 */
+  // const ThrowError = (): JSX.Element => {
+  //   throw new Error('Throw Error Test');
+  // };
+
   return (
     <>
       {myTimelineAreaFlg && (
         <div className='main-wrapper'>
-          <div>
-            <p>プロフィール表示エリア</p>
+          {/* <ThrowError /> */}
+          <div className='main-profile--wrapper'>
+            {profile.map((prof, index) => (
+              <div className='profile-contents' key={index.toString()}>
+                <div className='profile-contents--imageArea'>
+                  <div>
+                    {prof.banner.length > 1 ? (
+                      <img src={prof.banner} className='imageArea-contents--banner' />
+                    ) : (
+                      <img src={nullIconUrl} className='imageArea-contents--banner' />
+                    )}
+                  </div>
+                  <div className='imageArea-contents'>
+                    {prof.icon.length > 1 ? (
+                      <img src={prof.icon} className='imageArea-contents--icon' />
+                    ) : (
+                      <img src={nullIconUrl} className='imageArea-contents--icon' />
+                    )}
+                  </div>
+                </div>
+                <div className='profile-contents--accountArea'>
+                  <p>{prof.userName}</p>
+                  <p>{prof.description}</p>
+                </div>
+              </div>
+            ))}
+            <div className='profile-contents--line' />
           </div>
           <div className='main-wrapper--timeline'>
             {timeline.map((user, index) => (

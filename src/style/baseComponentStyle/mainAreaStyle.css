@@ -5,7 +5,7 @@
 
 /** timeline要素ラップクラス*/
 .main-wrapper--timeline {
-  background-color: lightgray;
+  background-color: white;
 }
 
 /** timelineコンテンツラップクラス*/
@@ -62,6 +62,39 @@
   transform: translate(-50%, -50%);
   width: 100px;
   height: 100px;
+}
+
+.main-profile--wrapper {
+  margin-bottom: 5%;
+}
+
+.profile-contents--imageArea {
+  position: relative;
+}
+
+.imageArea-contents--banner {
+  width: 100%;
+}
+
+.imageArea-contents {
+  position: absolute;
+  bottom: -10%;
+  left: 10px
+}
+
+.imageArea-contents--icon {
+  width: 65px;
+  border-radius: 50%;
+}
+
+.profile-contents--accountArea {
+  margin-top: 8%;
+}
+
+.profile-contents--line {
+  border-bottom: solid 1px;
+  padding-top: 10px;
+  margin-bottom: 3%;
 }
 
 .timeline-contents--statusBar {

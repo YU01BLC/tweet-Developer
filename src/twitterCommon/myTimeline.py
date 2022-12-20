@@ -2,12 +2,15 @@
 import tweepy
 import createAuthInfo
 from getRespons import execute_my_timeline
+from getRespons import execute_my_profile
 from datetime import timedelta
 import datetime
 
 # APIインスタンスの生成
 api = createAuthInfo.execute()
 db_ref = execute_my_timeline()
+db_ref_prof = execute_my_profile()
+
 
 # twitterアカウント名（＠マークは不要）
 twitter_id = 'PiPiPi__PiEN___'
@@ -22,6 +25,26 @@ params = {
     "include_rts": False         # リツイートを含むかどうか
 }
 
+
+def my_profile():
+  user = api.get_user(screen_name = twitter_id)
+  banner = api.get_profile_banner(screen_name = twitter_id)
+  banner_image = banner['sizes']['web']['url']
+  print(user.name)
+  print(banner['sizes']['ipad_retina']['url'])
+  # --> Twitter
+  print(user.description)
+  # --> What’s happening?!
+  print(user.profile_image_url_https)
+  
+  
+  db_ref_prof.document().set({
+    'user_name': user.name,
+    'user_description': user.description,
+    'user_icon': user.profile_image_url_https,
+    'user_banner': banner_image
+  })
+  return my_timeline()
 
 def my_timeline():
   media_list = [];

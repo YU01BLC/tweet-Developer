@@ -7,7 +7,7 @@
 .userTimeline-wrapper {
   margin: 0 10px;
   padding: 0 20px 10px;
-  background-color: lightgray;
+  background-color: white;
   border: solid 1px;
 }
 
@@ -28,13 +28,13 @@
 
 /** modal閉じるボタンhoverクラス */
 .button-style--closeButton:hover {
-  color: lightgray;
+  color: white;
   background: red;
 }
 
 /** modal要素追加ボタンhoverクラス */
 .button-style--addButton:hover {
-  color: lightgray;
+  color: white;
   background: skyblue;
 }
 
@@ -46,7 +46,7 @@
 
 /** modalTimeLine切り替えボタンhoverクラス */
 .button-style--tlChangeButton:hover {
-  color: lightgray;
+  color: white;
   background: #ff7321;
 }
 
@@ -92,4 +92,16 @@
   position: absolute;
   top: 5px;
   right: 5px;
+  cursor: pointer;
+}
+
+/** userアカウント情報listクラス*/
+.userInfo-list {
+  cursor: pointer;
+  width: 80%;
+}
+
+/** エラー文言用クラス*/
+.error-text {
+  color: red;
 }
