@@ -1,5 +1,14 @@
 declare var localStorage: Storage;
 
+/** Timelineを表示するユーザのプロフィール箇所用型 */
+export type ProfileType = {
+  docId: string;
+  userName: string;
+  description: string;
+  icon: string;
+  banner: string;
+};
+
 /** Timelineを表示するユーザ用型 */
 export type UserType = {
   docId: string;
