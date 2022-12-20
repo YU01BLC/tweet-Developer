@@ -1,5 +1,5 @@
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import { deleteTimeline } from '../../common/deleteTimeline';
+import { deleteTimeline, deleteMyProfile } from '../../common/deleteTimeline';
 import modalChangeState from '../../state/atoms/modalFlagAtom';
 import myTimelineState from '../../state/atoms/myTimelineAtom';
 import '../../style/baseComponentStyle/sidebarAreaStyle.css';
@@ -42,6 +42,8 @@ export default function SidebarArea() {
           </MenuItem>
           <MenuItem
             onClick={() => {
+              /** 一度取得していた自身のプロフィール情報を空にする */
+              deleteMyProfile();
               /** 一度取得していた自身のTL情報を空にする */
               deleteTimeline();
               /** MyTimeline非表示する */
