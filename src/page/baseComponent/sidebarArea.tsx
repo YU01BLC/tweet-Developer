@@ -1,4 +1,5 @@
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useEffect } from 'react';
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
 import { deleteTimeline, deleteMyProfile } from '../../common/deleteTimeline';
 import modalChangeState from '../../state/atoms/modalFlagAtom';
 import myTimelineState from '../../state/atoms/myTimelineAtom';
@@ -19,9 +20,13 @@ export default function SidebarArea() {
    * @type {boolean} MyTimeline箇所をクリックする度にTL取得情報が走ってしまうため、防止するようstate
    */
   const [getMyTimelineFlg, setGetMyTimelineFlg] = useRecoilState<boolean>(myTimelineState.myTimelineGetFlgState);
+  /** LoadingModal表示判定 RecoilState
+   * @type {boolean}
+   */
+  const loadingFlg = useRecoilValue(modalChangeState.loadingModalFlgState);
 
   return (
-    <Sidebar className='sidebar-wrapper'>
+    <Sidebar className={loadingFlg ? 'sidebar-wrapper sidebar-wrapper--noActive' : 'sidebar-wrapper'}>
       <Menu className='sidebar-contents'>
         <SubMenu label='timeline切り替え'>
           <MenuItem
