@@ -40,6 +40,7 @@ module.exports = {
   },
   rules: {
     'react/react-in-jsx-scope': 'off',
+    '@typescript-eslint/no-var-requires': 0,
     'import/extensions': [
       'error',
       {
@@ -64,15 +65,7 @@ module.exports = {
     'import/order': [
       'error',
       {
-        groups: [
-          'builtin',
-          'external',
-          'parent',
-          'sibling',
-          'index',
-          'object',
-          'type',
-        ],
+        groups: ['builtin', 'external', 'parent', 'sibling', 'index', 'object', 'type'],
         pathGroups: [
           {
             pattern: '{react,react-dom/**,react-router-dom}',
@@ -102,6 +95,8 @@ module.exports = {
      * 開発中に制限に引っ掛かりがちなのでwarnにとどめる
      */
     'prefer-const': 'warn',
+    /**一重引用符を含まないすべての JSX 属性値に対して一重引用符の使用しなければいけない */
+    'jsx-quotes': ['error', 'prefer-single'],
     /**
      * 複数行コメントを書く時には // ではなく /** にしなければいけない。
      * 無効化
@@ -124,7 +119,7 @@ module.exports = {
     /** ファイルの最大行数に制限をかける。*/
     'max-lines': 'warn',
     /** マジックナンバーを禁止する。*/
-    'no-magic-numbers': 'warn',
+    'no-magic-numbers': 'off',
     /**
      * アロー関数で戻り値を直接渡す場合にはreturnを付けず、直接値を渡すようにする
      * @example
@@ -187,15 +182,7 @@ module.exports = {
       'warn',
       {
         /** ファイル種別に応じてimport順を変更 */
-        groups: [
-          'builtin',
-          'external',
-          'internal',
-          ['parent', 'sibling'],
-          'index',
-          'object',
-          'type',
-        ],
+        groups: ['builtin', 'external', 'internal', ['parent', 'sibling'], 'index', 'object', 'type'],
         /** importの改行処理　無効 */
         'newlines-between': 'never',
         /** アルファベット順に並び替える */
@@ -226,4 +213,4 @@ module.exports = {
     /** レギュラーな空白意外許容しない */
     'no-irregular-whitespace': 'error',
   },
-}
+};

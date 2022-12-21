@@ -1,3 +1,16 @@
 .base-wrapper {
   display: flex;
+  margin-top: 5%;
+}
+
+.sidebar-wrapper {
+  min-width: 20%;
+}
+
+.main-wrapper {
+  min-width: 50%;
+}
+
+.search-wrapper {
+  min-width: 30%;
 }

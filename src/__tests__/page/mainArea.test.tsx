@@ -37,4 +37,13 @@ describe('初回レンダリング時', () => {
     screen.debug(textElement);
     expect(textElement).toBeInTheDocument();
   });
+
+  test('ダミーArea「TabContents表示エリア」を示すテキスト', () => {
+    act(() => {
+      render(<MainArea />, container);
+    });
+    const textElement = screen.getByText(/TabContents表示エリア/iu);
+    screen.debug(textElement);
+    expect(textElement).toBeInTheDocument();
+  });
 });
