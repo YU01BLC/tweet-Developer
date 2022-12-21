@@ -3,6 +3,11 @@
   margin-top: 2px;
 }
 
+.sidebar-wrapper--noActive{
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .sidebar-contents {
   position: fixed;
   width: 18%;

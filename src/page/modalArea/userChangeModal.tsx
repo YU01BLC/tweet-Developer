@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { collection, getDocs, query, orderBy, addDoc, Timestamp } from 'firebase/firestore';
-import { useState, useEffect } from 'react';
+import { useState, useLayoutEffect } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { UserType, UserInfoType, ProfileType } from '../../../@types/index';
 import { deleteTimeline, deleteUserInfo, deleteProfile } from '../../common/deleteTimeline';
@@ -10,15 +10,12 @@ import modalChangeState from '../../state/atoms/modalFlagAtom';
 import myTimelineState from '../../state/atoms/myTimelineAtom';
 import userChangeState from '../../state/atoms/userChangeAtom';
 import '../../style/modalAreaStyle/userChangeStyle.css';
+import LoadingModal from './loadingModal';
 
 /** TL切り替え用モーダルコンポーネント */
 export default function UserChangeModal() {
-  // localState
-  /** 表示対象ユーザ情報削除アイコンlocalState
+  /** 表示対象ユーザ情報削除アイコン
    * @type {string} 画像url情報を変数に格納
-   * @description
-   * ・true: 表示
-   * ・false: 非表示
    */
   const removeIconUrl: string = removeIcon;
 
@@ -26,6 +23,18 @@ export default function UserChangeModal() {
    * @type {UserType[]} ユーザーアカウント/名前格納変数
    */
   const userInfoLocal: UserType[] = [];
+
+  // localState
+
+  /** 選択しているユーザ名 localState
+   * @type {string} クリックしているユーザ名保持用State
+   */
+  const [targetName, setTargetName] = useState<string>('');
+
+  /** 選択しているユーザId localState
+   * @type {string} クリックしているユーザID保持用State
+   */
+  const [targetId, setTargetId] = useState<string>('');
 
   /** POST用ユーザ名 localState
    * @type {string} python側に送るuserNameを保存するState
@@ -51,6 +60,12 @@ export default function UserChangeModal() {
   const [confirmFlg, setConfirmFlg] = useState(false);
 
   // globalState
+
+  /** LoadingModal表示判定 RecoilState
+   * @type {boolean}
+   */
+  const [loadingFlg, setLoadingFlg] = useRecoilState(modalChangeState.loadingModalFlgState);
+
   /** userChangeModal表示制御RecoilState
    * @type {boolean} userChangeModal表示制御Flg
    * @description
@@ -136,29 +151,13 @@ export default function UserChangeModal() {
     deleteTimeline();
     /** アカウント選択時に一度stateに保持しているerrorメッセージ情報を削除する */
     setErrorText('');
+    /** 選択中のユーザIDをstateに保持 */
+    setTargetId(user.accountId);
+    /** 選択中のユーザ名をstateに保持 */
+    setTargetName(user.accountName);
 
-    console.log(user);
-    /** 選択したユーザ情報に基づいたTLを取得するためにPython側にaccountId/accountNameを渡す */
-    Axios.post('http://127.0.0.1:5000/user_timeline', {
-      accountId: user.accountId,
-      accountName: user.accountName,
-    })
-      .then()
-      .catch((error) => {
-        console.log('catch', error);
-        if (Axios.isAxiosError(error) && error.response && error.response.status === 400) {
-          console.log(error.message);
-        }
-        /** アカウント情報が誤っている場合、以下の文言を出力 */
-        setErrorText('選択したアカウントの情報が誤っています。');
-      });
-    /** TL情報を指定件数全て取得した後にTL切り替え処理を流すためにTL情報取得時間を稼ぐ
-     * (ネット環境次第で遅延秒数を増やした方が良いかもしれない)
-     */
-    setTimeout(() => {
-      /** TL切り替えボタンを表示する */
-      setConfirmFlg(true);
-    }, 1000);
+    /** TL切り替えボタンを表示する */
+    setConfirmFlg(true);
   };
 
   /** DB_timeline_data削除処理*/
@@ -217,6 +216,8 @@ export default function UserChangeModal() {
     setTimeout(() => {
       /** UserChangeModalを非表示にする */
       setUserChangeFlg(false);
+      /** 指定秒数後にloadingModalを非表示にする */
+      setLoadingFlg(false);
       /** MyTimeline表示Flgを立てる */
       setMyTimelineAreaFlg(true);
     }, 500);
@@ -226,41 +227,63 @@ export default function UserChangeModal() {
    * @returns {profileType[]} dataList(DB,my_timeline_dataに格納している値)
    */
   const catProfileInfo = () => {
-    const collectionRef = collection(db, 'profile_data');
-    const queryRef = query(collectionRef);
-    getDocs(queryRef).then(
-      (querySnapshot) => {
-        const dataList: ProfileType[] = [];
-        querySnapshot.docs.map((doc) => {
-          const resList: ProfileType = {
-            docId: doc.id,
-            userName: doc.data().user_name as string,
-            description: doc.data().user_description as string,
-            icon: doc.data().user_icon as string,
-            banner: doc.data().user_banner as string,
-          };
-          return dataList.push(resList);
-        });
-        setProfile(dataList);
-        console.log('responseProfileData', dataList);
-      },
-      (querySnapshot) => {
-        console.log(querySnapshot);
-      }
-    );
-    /** プロフィール情報を取得後にDBのプロフィール情報を削除する */
-    deleteProfile();
-    catUserTimeLine();
+    /** TL取得中にloadingModalを表示する */
+    setLoadingFlg(true);
+    /** 選択したユーザ情報に基づいたTLを取得するためにPython側にaccountId/accountNameを渡す */
+    Axios.post('http://127.0.0.1:5000/user_timeline', {
+      accountId: targetId,
+      accountName: targetName,
+    })
+      .then(() => {
+        setTargetId('');
+        setTargetName('');
+      })
+      .catch((error) => {
+        console.log('catch', error);
+        if (Axios.isAxiosError(error) && error.response && error.response.status === 400) {
+          console.log(error.message);
+        }
+        /** アカウント情報が誤っている場合、以下の文言を出力 */
+        setErrorText('選択したアカウントの情報が誤っています。');
+      });
+    setTimeout(() => {
+      const collectionRef = collection(db, 'profile_data');
+      const queryRef = query(collectionRef);
+      getDocs(queryRef).then(
+        (querySnapshot) => {
+          const dataList: ProfileType[] = [];
+          querySnapshot.docs.map((doc) => {
+            const resList: ProfileType = {
+              docId: doc.id,
+              userName: doc.data().user_name as string,
+              description: doc.data().user_description as string,
+              icon: doc.data().user_icon as string,
+              banner: doc.data().user_banner as string,
+            };
+            return dataList.push(resList);
+          });
+          setProfile(dataList);
+          console.log('responseProfileData', dataList);
+        },
+        (querySnapshot) => {
+          console.log(querySnapshot);
+        }
+      );
+      /** プロフィール情報を取得後にDBのプロフィール情報を削除する */
+      deleteProfile();
+      catUserTimeLine();
+    }, 5000);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     getUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
-      {userChangeFlg && (
+      {loadingFlg && <LoadingModal />}
+      {userChangeFlg && !loadingFlg && (
         <div className='userTimeline-wrapper'>
           <div className='button-wrapper'>
             <p

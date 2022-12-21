@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { collection, getDocs, query, orderBy, Timestamp } from 'firebase/firestore';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { UserInfoType, ProfileType } from '../../../@types/index';
 import { deleteMyTimeline, deleteMyProfile } from '../../common/deleteTimeline';
@@ -106,7 +106,7 @@ export default function MainArea() {
     catUserTimeLine();
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     Axios.post('http://127.0.0.1:5000/my_timeline')
       .then((response) => {
         console.log(response);
