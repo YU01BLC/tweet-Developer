@@ -1,7 +1,7 @@
 import { atom } from 'recoil';
 import { UserInfoType, ProfileType } from '../../../@types/index';
 
-/** UserChangeModal表示制御Atom */
+/** TL情報取得制御Atom */
 export const myTimelineGetFlgState = atom<boolean>({
   key: 'MY_TIMELINE_GET_FLG',
   default: true,

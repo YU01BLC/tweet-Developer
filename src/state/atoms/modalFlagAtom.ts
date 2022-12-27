@@ -3,7 +3,7 @@ import { atom } from 'recoil';
 /** MyTimeline表示制御Atom */
 export const myTimelineAreaFlgState = atom<boolean>({
   key: 'MY_TIMELINE_FLG_AREA',
-  default: true,
+  default: false,
 });
 
 /** UserChangeModal表示制御Atom */
