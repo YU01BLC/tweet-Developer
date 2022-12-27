@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { deleteTimeline, deleteMyProfile } from '../../common/deleteTimeline';
 import modalChangeState from '../../state/atoms/modalFlagAtom';
 import myTimelineState from '../../state/atoms/myTimelineAtom';
@@ -16,15 +15,14 @@ export default function SidebarArea() {
    * @type {boolean} 任意のuser情報取得modalの表示を制御するようstate
    */
   const setUserChangeModalFlg = useSetRecoilState<boolean>(modalChangeState.userChangeAreaFlgState);
-  /** MyTimeline項目2重クリック防止制御用RecoilState
-   * @type {boolean} MyTimeline箇所をクリックする度にTL取得情報が走ってしまうため、防止するようstate
-   */
-  const [getMyTimelineFlg, setGetMyTimelineFlg] = useRecoilState<boolean>(myTimelineState.myTimelineGetFlgState);
   /** LoadingModal表示判定 RecoilState
    * @type {boolean}
    */
-  const loadingFlg = useRecoilValue(modalChangeState.loadingModalFlgState);
-
+  const [loadingFlg, setLoadingFlg] = useRecoilState(modalChangeState.loadingModalFlgState);
+  /** MyTimeline情報取得制御用RecoilState
+   * @type {boolean} MyTimeline箇所をクリックする度にTL取得情報が走ってしまうため、防止するようstate
+   */
+  const [getMyTimelineFlg, setGetMyTimelineFlg] = useRecoilState<boolean>(myTimelineState.myTimelineGetFlgState);
   return (
     <Sidebar className={loadingFlg ? 'sidebar-wrapper sidebar-wrapper--noActive' : 'sidebar-wrapper'}>
       <Menu className='sidebar-contents'>
@@ -35,7 +33,9 @@ export default function SidebarArea() {
               setUserChangeModalFlg(false);
               /** MyTimeline表示する */
               setMyTimelineAreaFlg(true);
-              /** 2重クリック防止のため、getMyTimelineFlgの状態を参照する */
+              /** 2重クリック防止のため、TL取得中はsidebarを非アクティブにする*/
+              setLoadingFlg(true);
+              /** 「myTimeline」ボタン押下時に毎回TL情報を取得するようにする。 */
               if (getMyTimelineFlg) {
                 setGetMyTimelineFlg(false);
               } else {

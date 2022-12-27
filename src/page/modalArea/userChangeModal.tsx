@@ -10,7 +10,6 @@ import modalChangeState from '../../state/atoms/modalFlagAtom';
 import myTimelineState from '../../state/atoms/myTimelineAtom';
 import userChangeState from '../../state/atoms/userChangeAtom';
 import '../../style/modalAreaStyle/userChangeStyle.css';
-import LoadingModal from './loadingModal';
 
 /** TL切り替え用モーダルコンポーネント */
 export default function UserChangeModal() {
@@ -206,16 +205,12 @@ export default function UserChangeModal() {
         console.log(querySnapshot);
       }
     );
-    /** TL切り替えボタンを非表示にする */
-    setConfirmFlg(false);
     /** 一度取得していたｐロフィール情報を空にする */
     deleteProfile();
     /** 一度取得していたTL情報を空にする(以下処理でAtomを更新を行い、再度TL情報を取得するため) */
     deleteTimeline();
     /** 古いTL情報を削除する処理を全て行った後に自身のTL情報取得する処理を行いたいため遅延処理を噛ませる */
     setTimeout(() => {
-      /** UserChangeModalを非表示にする */
-      setUserChangeFlg(false);
       /** 指定秒数後にloadingModalを非表示にする */
       setLoadingFlg(false);
       /** MyTimeline表示Flgを立てる */
@@ -227,6 +222,8 @@ export default function UserChangeModal() {
    * @returns {profileType[]} dataList(DB,my_timeline_dataに格納している値)
    */
   const catProfileInfo = () => {
+    /** UserChangeModalを非表示にする */
+    setUserChangeFlg(false);
     /** TL取得中にloadingModalを表示する */
     setLoadingFlg(true);
     /** 選択したユーザ情報に基づいたTLを取得するためにPython側にaccountId/accountNameを渡す */
@@ -237,42 +234,46 @@ export default function UserChangeModal() {
       .then(() => {
         setTargetId('');
         setTargetName('');
+        setTimeout(() => {
+          const collectionRef = collection(db, 'profile_data');
+          const queryRef = query(collectionRef);
+          getDocs(queryRef).then(
+            (querySnapshot) => {
+              const dataList: ProfileType[] = [];
+              querySnapshot.docs.map((doc) => {
+                const resList: ProfileType = {
+                  docId: doc.id,
+                  userName: doc.data().user_name as string,
+                  description: doc.data().user_description as string,
+                  icon: doc.data().user_icon as string,
+                  banner: doc.data().user_banner as string,
+                };
+                return dataList.push(resList);
+              });
+              setProfile(dataList);
+              console.log('responseProfileData', dataList);
+            },
+            (querySnapshot) => {
+              console.log(querySnapshot);
+            }
+          );
+          /** プロフィール情報を取得後にDBのプロフィール情報を削除する */
+          deleteProfile();
+          catUserTimeLine();
+        }, 500);
       })
       .catch((error) => {
         console.log('catch', error);
+        /** TL取得中にloadingModalを非表示する */
         if (Axios.isAxiosError(error) && error.response && error.response.status === 400) {
           console.log(error.message);
         }
         /** アカウント情報が誤っている場合、以下の文言を出力 */
+        setLoadingFlg(false);
         setErrorText('選択したアカウントの情報が誤っています。');
+        /** UserChangeModalを表示にする */
+        setUserChangeFlg(true);
       });
-    setTimeout(() => {
-      const collectionRef = collection(db, 'profile_data');
-      const queryRef = query(collectionRef);
-      getDocs(queryRef).then(
-        (querySnapshot) => {
-          const dataList: ProfileType[] = [];
-          querySnapshot.docs.map((doc) => {
-            const resList: ProfileType = {
-              docId: doc.id,
-              userName: doc.data().user_name as string,
-              description: doc.data().user_description as string,
-              icon: doc.data().user_icon as string,
-              banner: doc.data().user_banner as string,
-            };
-            return dataList.push(resList);
-          });
-          setProfile(dataList);
-          console.log('responseProfileData', dataList);
-        },
-        (querySnapshot) => {
-          console.log(querySnapshot);
-        }
-      );
-      /** プロフィール情報を取得後にDBのプロフィール情報を削除する */
-      deleteProfile();
-      catUserTimeLine();
-    }, 5000);
   };
 
   useLayoutEffect(() => {
@@ -282,7 +283,6 @@ export default function UserChangeModal() {
 
   return (
     <>
-      {loadingFlg && <LoadingModal />}
       {userChangeFlg && !loadingFlg && (
         <div className='userTimeline-wrapper'>
           <div className='button-wrapper'>
@@ -343,7 +343,7 @@ export default function UserChangeModal() {
           </div>
           <div>
             {userInfo.map((user, index) => (
-              <div className='userInfo-wrapper' key={index.toString()}>
+              <div className='userInfo-wrapper' tabIndex={0} key={index.toString()}>
                 <div
                   onClick={() => {
                     /** 取得していたUser情報を削除する */
@@ -376,6 +376,8 @@ export default function UserChangeModal() {
               <p
                 className='button-style button-style--tlChangeButton'
                 onClick={() => {
+                  /** TL切り替えボタンを非表示にする */
+                  setConfirmFlg(false);
                   /** 選択したuserTimelineを表示する */
                   catProfileInfo();
                 }}

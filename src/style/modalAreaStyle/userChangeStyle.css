@@ -23,6 +23,7 @@
   cursor: pointer;
   -webkit-transition: all 0.3s;
   transition: all 0.3s;
+  border: 1px solid;
   border-radius: 0.2rem;
 }
 
@@ -85,6 +86,12 @@
   margin: 10px 0;
   border: 1px solid;
   display: flex;
+}
+
+/** userアカウント情報Active時用のクラス*/
+.userInfo-wrapper:focus {
+  border-left: solid 6px skyblue;
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.267);
 }
 
 /** userアカウント情報削除ボタンクラス*/
