@@ -1,6 +1,6 @@
 import Axios from 'axios';
 import { collection, getDocs, query, orderBy, Timestamp } from 'firebase/firestore';
-import { useLayoutEffect } from 'react';
+import { useState, useLayoutEffect } from 'react';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { UserInfoType, ProfileType } from '../../../@types/index';
 import { deleteMyTimeline, deleteMyProfile } from '../../common/deleteTimeline';
@@ -10,16 +10,23 @@ import nullIcon from '../../image/null_icon.png';
 import modalChangeState from '../../state/atoms/modalFlagAtom';
 import myTimelineState from '../../state/atoms/myTimelineAtom';
 import '../../style/baseComponentStyle/mainAreaStyle.css';
+import LoadingModal from '../modalArea/loadingModal';
 
 /** MainAreaコンポーネント */
 export default function MainArea() {
+  //localState
+  /** 初回データ取得時にエラーの時にErrorBoundary画面を表示する用 localState
+   * @type {boolean}
+   */
+  const [boundaryFlg, setBoundaryFlg] = useState<boolean>(false);
+
   /** myTimeline表示判定RecoilState
    * @type {boolean}
    * @description
    * ・true: 表示
    * ・false: 非表示
    */
-  const myTimelineAreaFlg = useRecoilValue<boolean>(modalChangeState.myTimelineAreaFlgState);
+  const [myTimelineFlg, setMyTimelineAreaFlg] = useRecoilState<boolean>(modalChangeState.myTimelineAreaFlgState);
 
   /** timeline再取得用RecoilState
    * @type {boolean} 当該stateが更新された時にtimeline情報再取得処理が走る
@@ -35,6 +42,11 @@ export default function MainArea() {
    * @type {profileType[]}
    */
   const [profile, setProfile] = useRecoilState<ProfileType[]>(myTimelineState.profileState);
+
+  /** LoadingModal表示判定 RecoilState
+   * @type {boolean}
+   */
+  const [loadingFlg, setLoadingFlg] = useRecoilState(modalChangeState.loadingModalFlgState);
 
   /** 動画再生ボタンの画像URL情報を変数に代入 */
   const videoIconUrl: string = videoIcon;
@@ -73,12 +85,20 @@ export default function MainArea() {
     );
     /** 取得したtimeline情報をDBから削除する。 */
     deleteMyTimeline();
+    setTimeout(() => {
+      /** 指定秒数後にloadingModalを非表示にする */
+      setLoadingFlg(false);
+      /** MyTimeline表示Flgを立てる */
+      setMyTimelineAreaFlg(true);
+    }, 500);
   };
 
   /** 自分のプロフィール情報取得処理
    * @returns {profileType[]} dataList(DB,my_timeline_dataに格納している値)
    */
   const catProfileInfo = () => {
+    /** TL取得中にloadingModalを表示する */
+    setLoadingFlg(true);
     const collectionRef = collection(db, 'my_profile_data');
     const queryRef = query(collectionRef);
     getDocs(queryRef).then(
@@ -110,6 +130,7 @@ export default function MainArea() {
     Axios.post('http://127.0.0.1:5000/my_timeline')
       .then((response) => {
         console.log(response);
+        setBoundaryFlg(false);
         catProfileInfo();
       })
       .catch((error) => {
@@ -117,21 +138,23 @@ export default function MainArea() {
         if (Axios.isAxiosError(error) && error.response && error.response.status === 400) {
           console.log(error.message);
         }
+        setBoundaryFlg(true);
       });
     /** myTimelineFlgが更新される時に再レンダリングさせたいため、依存関係起因のeslintエラーを無視する */
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getMyTimelineFlg]);
 
-  /**ErrorBoundary確認用 */
-  // const ThrowError = (): JSX.Element => {
-  //   throw new Error('Throw Error Test');
-  // };
+  /**ErrorBoundary表示用 */
+  const ThrowError = (): JSX.Element => {
+    throw new Error('Throw Error');
+  };
 
   return (
     <>
-      {myTimelineAreaFlg && (
+      {loadingFlg && <LoadingModal />}
+      {myTimelineFlg && !loadingFlg && (
         <div className='main-wrapper'>
-          {/* <ThrowError /> */}
+          {boundaryFlg && <ThrowError />}
           <div className='main-profile--wrapper'>
             {profile.map((prof, index) => (
               <div className='profile-contents' key={index.toString()}>
