@@ -10,6 +10,8 @@ doc_ref_user_timeline = db.collection('timeline_data')
 doc_ref_my_timeline = db.collection('my_timeline_data')
 doc_ref_user_profile = db.collection('profile_data')
 doc_ref_my_profile = db.collection('my_profile_data')
+doc_ref_trend = db.collection('trend_data')
+
 
 def execute_user_timeline():
     return doc_ref_user_timeline
@@ -22,6 +24,9 @@ def execute_user_profile():
 
 def execute_my_profile():
     return doc_ref_my_profile
+
+def execute_trend():
+    return doc_ref_trend
 
 # docs = doc_ref.stream()
 

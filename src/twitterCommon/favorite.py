@@ -5,7 +5,7 @@ import time
 api = createAuthInfo.execute()
  
 # 検索キーワードと件数
-account_id = "8z1SLJqmDez8Hir"
+account_id = "_shi_aa"
 count = 500
 fix_count = 50
 
@@ -31,6 +31,7 @@ for tweet in api.user_timeline(id = account_id, params = params):
         screen_name = tweet.user.screen_name
         tweet_text = tweet.text
         api.create_favorite(user_key)                #いいね
+        print('-------------------------------------')   # 見やすくするための区切り
         print("tweet:" + tweet_text)                 # ツイート内容 
         print('【成功】' + '＠' + user_id + 'さんの「いいね」に成功しました。')
         fav_count += 1

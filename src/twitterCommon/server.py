@@ -3,6 +3,7 @@ from flask import request, make_response, jsonify
 from flask_cors import CORS
 from userTimeline import user_profile
 from myTimeline import my_profile
+from trend import trend
 
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
@@ -36,6 +37,10 @@ def post_timeline():
 @app.route("/my_timeline", methods=['GET','POST'])
 def post_my_timeline():
     return my_profile()
+
+@app.route("/trend", methods=['GET','POST'])
+def post_trend():
+    return trend()
 
 if __name__ == "__main__":
     app.debug = True
