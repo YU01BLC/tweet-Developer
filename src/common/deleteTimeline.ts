@@ -111,3 +111,25 @@ export const deleteMyTimeline = () => {
       console.log(error);
     });
 };
+
+/** トレンド情報を削除する処理 */
+export const deleteTrend = () => {
+  const collectionTrend = collection(db, 'trend_data');
+  getDocs(collectionTrend)
+    .then((querySnapshot) => {
+      const { docs } = querySnapshot;
+      (async () => {
+        await Promise.all(
+          docs.map((document) => {
+            const { id } = document;
+            return deleteDoc(doc(collectionTrend, id));
+          })
+        );
+      })().catch((error) => {
+        console.log(error);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
