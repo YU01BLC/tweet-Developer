@@ -1,5 +1,12 @@
 declare var localStorage: Storage;
 
+/** Trend用型 */
+export type TrendType = {
+  docId: string;
+  trendName: string;
+  trendURL: string;
+};
+
 /** Timelineを表示するユーザのプロフィール箇所用型 */
 export type ProfileType = {
   docId: string;
