@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { unmountComponentAtNode } from 'react-dom';
 import { act } from 'react-dom/test-utils';
-import SearchArea from '../../page/baseComponent/searchArea';
+import SearchArea from '../../page/baseComponent/researchArea';
 
 let container: any = null;
 beforeEach(() => {

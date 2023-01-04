@@ -38,6 +38,7 @@ for result in search_results:
         tweets = result.text
         fav_count += 1
         time.sleep(3)
+        print('-------------------------------------')   # 見やすくするための区切り
         print('【成功】' + str(user_id) + '＠' + str(username) + 'さんが' + str(time) + 'に「' + str(tweets) + '」とツイート')
         api.create_favorite(user_key)
         if fav_count == fix_count:

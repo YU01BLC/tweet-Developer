@@ -1,0 +1,39 @@
+/** 最上位要素ラップクラス */
+.research-wrapper {
+  margin: 10px;
+}
+
+/** トレンド表示箇所ラップクラス */
+.research-contents {
+  border-left: solid 1px;
+}
+
+/** トレンド項目用クラス */
+.research-contents--item {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  color: black;
+  margin-left: 5%;
+  margin-bottom: 10px;
+}
+
+/** トレンド項目hover用クラス */
+.research-contents--item::after {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  content: '';
+  width: 100%;
+  height: 1px;
+  background: #333;
+  transform: scale(0, 1);
+  transform-origin: left top;
+  transition: transform .3s;
+}
+
+/** トレンド項目hover用クラス */
+.research-contents--item:hover::after {
+  transform: scale(1, 1);
+}
