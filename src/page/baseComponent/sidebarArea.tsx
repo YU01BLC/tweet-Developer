@@ -61,10 +61,10 @@ export default function SidebarArea() {
           </MenuItem>
         </SubMenu>
 
-        <SubMenu label='Twitter Contents1'>
-          <MenuItem> Twitter Action2 </MenuItem>
+        <SubMenu label='Follow Action'>
+          <MenuItem> Follow </MenuItem>
+          <MenuItem> Remove </MenuItem>
         </SubMenu>
-        <MenuItem> Twitter Contents2 </MenuItem>
         <MenuItem> Twitter Contents3 </MenuItem>
       </Menu>
     </Sidebar>
