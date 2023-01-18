@@ -18,10 +18,17 @@ export const loadingModalFlgState = atom<boolean>({
   default: false,
 });
 
+/** FollowModal表示制御Atom */
+export const followModalFlgState = atom<boolean>({
+  key: 'FOLLOW_MODAL_FLG',
+  default: false,
+});
+
 export const modalChangeState = {
   myTimelineAreaFlgState,
   userChangeAreaFlgState,
   loadingModalFlgState,
+  followModalFlgState,
 };
 
 export default modalChangeState;

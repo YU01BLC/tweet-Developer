@@ -35,3 +35,10 @@ export type UserInfoType = {
   userName: string;
   tweetTime: Timestamp;
 };
+
+/** フォロー済みユーザ取得用型 */
+export type FollowType = {
+  docId: string;
+  accountId: string;
+  accountName: string;
+};

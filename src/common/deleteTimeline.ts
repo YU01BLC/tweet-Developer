@@ -133,3 +133,25 @@ export const deleteTrend = () => {
       console.log(error);
     });
 };
+
+/** フォロー情報を削除する処理 */
+export const deleteFollowedUser = () => {
+  const collectionFollow = collection(db, 'follow_data');
+  getDocs(collectionFollow)
+    .then((querySnapshot) => {
+      const { docs } = querySnapshot;
+      (async () => {
+        await Promise.all(
+          docs.map((document) => {
+            const { id } = document;
+            return deleteDoc(doc(collectionFollow, id));
+          })
+        );
+      })().catch((error) => {
+        console.log(error);
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};

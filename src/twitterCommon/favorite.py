@@ -5,9 +5,9 @@ import time
 api = createAuthInfo.execute()
  
 # 検索キーワードと件数
-account_id = "_shi_aa"
+account_id = "_hacha_o0"
 count = 500
-fix_count = 50
+fix_count = 100
 
 try_count = 0
 fav_count = 0
