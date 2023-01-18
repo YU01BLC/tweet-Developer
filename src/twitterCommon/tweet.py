@@ -5,7 +5,7 @@ import createAuthInfo
 api = createAuthInfo.execute()
  
 # ツイートを投稿
-Account = 'pitbull_1009'
+Account = '_hacha_o0'
 count = 100
 fix_count = 30 # 1日の上限値が50
 try_count = 0
@@ -13,12 +13,12 @@ tweet_count = 0
 error_count = 0
 
 params = {
-  "exclude_replies": True,    # リプライ(返信)を含まないかどうか(Trueで含まない)
+  "exclude_replies": False,    # リプライ(返信)を含まないかどうか(Falseで含まない)
   "include_rts": False         # リツイートを含むかどうか
 }
 
 # その一つ一つに対してリプライをする．
-msg = 'じーーーーーーーーーまる'
+msg = 'はるちゃんなう！はるちゃんなう！！'
 for tweet in api.user_timeline(id = Account, count = count, params = params):
   try_count += 1
   print('実行件数' + str(try_count))
@@ -40,4 +40,4 @@ for tweet in api.user_timeline(id = Account, count = count, params = params):
     print(f'【失敗】{e}')
     continue
 
-print(f'実行件数{try_count}件: 「フォロー」件数{tweet_count}件 / 「失敗」件数{error_count}件')
+print(f'実行件数{try_count}件: 「リプライ」件数{tweet_count}件 / 「失敗」件数{error_count}件')
