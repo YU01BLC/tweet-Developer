@@ -1,17 +1,16 @@
-import { useState, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import { deleteTrend } from '../../common/deleteTimeline';
-import { TrendType } from '../../../@types/index';
 import Axios from 'axios';
 import { collection, getDocs, query } from 'firebase/firestore';
+import { useState, useEffect } from 'react';
+import { useRecoilState } from 'recoil';
+import { TrendType } from '../../../@types/index';
+import { deleteTrend } from '../../common/deleteTimeline';
 import db from '../../firebase';
 import trendState from '../../state/atoms/trendAtom';
-
 import '../../style/baseComponentStyle/researchAreaStyle.css';
 
 /** ResearchAreaコンポーネント */
 export default function ResearchArea() {
-  //localState
+  // localState
   /** 初回データ取得時にエラーの時にErrorBoundary画面を表示する用 localState
    * @type {boolean}
    */
@@ -22,7 +21,7 @@ export default function ResearchArea() {
    */
   const [getTrendFlg, setGetTrendFlg] = useState<boolean>(true);
 
-  //RecoilState
+  // RecoilState
   /** トレンド情報用RecoilState
    * @type {TrendType[]}
    */
@@ -79,7 +78,7 @@ export default function ResearchArea() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getTrendFlg]);
 
-  /**ErrorBoundary表示用 */
+  /** ErrorBoundary表示用 */
   const ThrowError = (): JSX.Element => {
     throw new Error('Throw Error');
   };
