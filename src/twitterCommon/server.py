@@ -4,6 +4,7 @@ from flask_cors import CORS
 from userTimeline import user_profile
 from myTimeline import my_profile
 from trend import trend
+from autoFollow import follow
 
 
 app = Flask(__name__, static_folder="./build/static", template_folder="./build")
@@ -41,6 +42,13 @@ def post_my_timeline():
 @app.route("/trend", methods=['GET','POST'])
 def post_trend():
     return trend()
+
+@app.route("/follow", methods=['GET','POST'])
+def post_follow():
+    data = request.get_json()
+    keyword = data['word']
+    add_count = data['count']
+    return follow(keyword,add_count)
 
 if __name__ == "__main__":
     app.debug = True
