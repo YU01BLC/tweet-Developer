@@ -23,6 +23,10 @@ export default function SidebarArea() {
    * @type {boolean} MyTimeline箇所をクリックする度にTL取得情報が走ってしまうため、防止するようstate
    */
   const [getMyTimelineFlg, setGetMyTimelineFlg] = useRecoilState<boolean>(myTimelineState.myTimelineGetFlgState);
+  /** FollowModal表示判定 RecoilState
+   * @type {boolean}
+   */
+  const [followFlg, setFollowFlg] = useRecoilState(modalChangeState.followModalFlgState);
   return (
     <Sidebar className={loadingFlg ? 'sidebar-wrapper sidebar-wrapper--noActive' : 'sidebar-wrapper'}>
       <Menu className='sidebar-contents'>
@@ -62,7 +66,18 @@ export default function SidebarArea() {
         </SubMenu>
 
         <SubMenu label='Follow Action'>
-          <MenuItem> Follow </MenuItem>
+          <MenuItem
+            onClick={() => {
+              /** MyTimeline非表示する */
+              setMyTimelineAreaFlg(false);
+              /** UserChangeModalを非表示にする */
+              setUserChangeModalFlg(false);
+              /** FollowModalを表示にする */
+              setFollowFlg(true);
+            }}
+          >
+            Follow
+          </MenuItem>
           <MenuItem> Remove </MenuItem>
         </SubMenu>
         <MenuItem> Twitter Contents3 </MenuItem>
