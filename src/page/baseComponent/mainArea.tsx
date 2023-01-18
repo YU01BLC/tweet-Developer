@@ -5,8 +5,8 @@ import { useRecoilValue, useRecoilState } from 'recoil';
 import { UserInfoType, ProfileType } from '../../../@types/index';
 import { deleteMyTimeline, deleteMyProfile } from '../../common/deleteTimeline';
 import db from '../../firebase';
-import videoIcon from '../../image/video_start.png';
 import nullIcon from '../../image/null_icon.png';
+import videoIcon from '../../image/video_start.png';
 import modalChangeState from '../../state/atoms/modalFlagAtom';
 import myTimelineState from '../../state/atoms/myTimelineAtom';
 import '../../style/baseComponentStyle/mainAreaStyle.css';
@@ -14,7 +14,7 @@ import LoadingModal from '../modalArea/loadingModal';
 
 /** MainAreaコンポーネント */
 export default function MainArea() {
-  //localState
+  // localState
   /** 初回データ取得時にエラーの時にErrorBoundary画面を表示する用 localState
    * @type {boolean}
    */
@@ -144,7 +144,7 @@ export default function MainArea() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getMyTimelineFlg]);
 
-  /**ErrorBoundary表示用 */
+  /** ErrorBoundary表示用 */
   const ThrowError = (): JSX.Element => {
     throw new Error('Throw Error');
   };
