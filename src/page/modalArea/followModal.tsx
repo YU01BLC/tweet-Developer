@@ -8,6 +8,7 @@ import db from '../../firebase';
 import followState from '../../state/atoms/followActionAtom';
 import modalChangeState from '../../state/atoms/modalFlagAtom';
 import '../../style/modalAreaStyle/followModalStyle.css';
+import '../../style/commonStyle.css';
 
 /** UserFollow用モーダルコンポーネント */
 export default function FollowModal() {
@@ -65,7 +66,6 @@ export default function FollowModal() {
   const handleChange: React.ChangeEventHandler<HTMLSelectElement> = (event) => {
     setFollowNum(Number(event.target.value));
   };
-
   /** フォローしたユーザ情報取得処理
    * @returns {profileType[]} dataList(DB,follow_dataに格納している値)
    */
@@ -109,20 +109,18 @@ export default function FollowModal() {
         catFollowedUser();
         /** ローディングモーダルを非表示にする */
         setLoadingFlg(false);
-        /** 合計フォロー人数が50人に到達した時に警告文を表示する */
-        if (followCount === 50) {
-          setLimit(true);
-        }
       })
       .catch((error) => {
         console.log('catch', error);
         if (Axios.isAxiosError(error) && error.response && error.response.status === 400) {
           console.log(error.message);
         }
+        /** フォロー処理失敗時にキーワード欄を空にする */
+        setKeyword('');
         /** アカウント情報が誤っている場合、以下の文言を出力 */
         setLoadingFlg(false);
         /** エラーメッセージを表示するためにlocalStateに格納する */
-        setErrorText('選択したアカウントの情報が誤っています。');
+        setErrorText('フォロー処理が失敗しました。\nしばらく経ってからもう一度お試しください。');
         /** Followモーダルを表示にする */
         setFollowFlg(true);
       });
@@ -131,7 +129,7 @@ export default function FollowModal() {
   return (
     <>
       {followFlg && !loadingFlg && (
-        <div className='follow-wrapper'>
+        <div className='modal-wrapper'>
           <div className='button-wrapper'>
             <p
               className='button-style button-style--closeButton'

@@ -10,6 +10,7 @@ import modalChangeState from '../../state/atoms/modalFlagAtom';
 import myTimelineState from '../../state/atoms/myTimelineAtom';
 import userChangeState from '../../state/atoms/userChangeAtom';
 import '../../style/modalAreaStyle/userChangeStyle.css';
+import '../../style/commonStyle.css';
 
 /** TL切り替え用モーダルコンポーネント */
 export default function UserChangeModal() {
@@ -154,7 +155,6 @@ export default function UserChangeModal() {
     setTargetId(user.accountId);
     /** 選択中のユーザ名をstateに保持 */
     setTargetName(user.accountName);
-
     /** TL切り替えボタンを表示する */
     setConfirmFlg(true);
   };
@@ -277,6 +277,7 @@ export default function UserChangeModal() {
   };
 
   useLayoutEffect(() => {
+    /** 初回起動時のみ以下処理を実行したいため、依存関係起因のeslintエラーを無視する */
     getUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -284,7 +285,7 @@ export default function UserChangeModal() {
   return (
     <>
       {userChangeFlg && !loadingFlg && (
-        <div className='userTimeline-wrapper'>
+        <div className='modal-wrapper'>
           <div className='button-wrapper'>
             <p
               className='button-style button-style--closeButton'

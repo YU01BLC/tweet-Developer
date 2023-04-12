@@ -16,7 +16,7 @@ export const followCountState = atom<number>({
 /** フォロー上限管理用Atom */
 export const followLimitState = atom<boolean>({
   key: 'FOLLOW_LIMIT',
-  default: true,
+  default: false,
 });
 
 export const FollowState = {

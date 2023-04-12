@@ -1,7 +1,8 @@
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState, useRecoilValue } from 'recoil';
 import { deleteTimeline, deleteMyProfile } from '../../common/deleteTimeline';
 import modalChangeState from '../../state/atoms/modalFlagAtom';
 import myTimelineState from '../../state/atoms/myTimelineAtom';
+import followState from '../../state/atoms/followActionAtom';
 import '../../style/baseComponentStyle/sidebarAreaStyle.css';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 
@@ -18,7 +19,7 @@ export default function SidebarArea() {
   /** LoadingModal表示判定 RecoilState
    * @type {boolean}
    */
-  const [loadingFlg, setLoadingFlg] = useRecoilState(modalChangeState.loadingModalFlgState);
+  const [loadingFlg, setLoadingFlg] = useRecoilState<boolean>(modalChangeState.loadingModalFlgState);
   /** MyTimeline情報取得制御用RecoilState
    * @type {boolean} MyTimeline箇所をクリックする度にTL取得情報が走ってしまうため、防止するようstate
    */
@@ -26,7 +27,15 @@ export default function SidebarArea() {
   /** FollowModal表示判定 RecoilState
    * @type {boolean}
    */
-  const [followFlg, setFollowFlg] = useRecoilState(modalChangeState.followModalFlgState);
+  const setFollowFlg = useSetRecoilState<boolean>(modalChangeState.followModalFlgState);
+  /** フォロー上限管理用RecoilState
+   * @type {boolean} フォロー上限に到達したことを検知するようState
+   */
+  const setLimit = useSetRecoilState<boolean>(followState.followLimitState);
+  /** フォロー人数管理用RecoilState
+   * @type {number}
+   */
+  const followCount = useRecoilValue<number>(followState.followCountState);
   return (
     <Sidebar className={loadingFlg ? 'sidebar-wrapper sidebar-wrapper--noActive' : 'sidebar-wrapper'}>
       <Menu className='sidebar-contents'>
@@ -59,6 +68,8 @@ export default function SidebarArea() {
               setMyTimelineAreaFlg(false);
               /** UserChangeModalを表示にする */
               setUserChangeModalFlg(true);
+              /** FollowModalを非表示にする */
+              setFollowFlg(false);
             }}
           >
             userTimeline
@@ -74,6 +85,10 @@ export default function SidebarArea() {
               setUserChangeModalFlg(false);
               /** FollowModalを表示にする */
               setFollowFlg(true);
+              /** 合計フォロー人数が50人に到達した時に警告文を表示する */
+              if (followCount > 50) {
+                setLimit(true);
+              }
             }}
           >
             Follow

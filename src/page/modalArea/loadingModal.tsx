@@ -3,8 +3,8 @@ import '../../style/modalAreaStyle/loadingModalStyle.css';
 
 /** ローディング待機用モーダルコンポーネント */
 export default function LoadingModal() {
-  /** 表示対象ユーザ情報削除アイコン
-   * @type {string} 画像url情報を変数に格納
+  /** ローディング画像url情報を変数に格納
+   * @type {string}
    */
   const loadingIconUrl: string = loadingIcon;
   return (

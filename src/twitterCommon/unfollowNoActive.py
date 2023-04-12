@@ -30,7 +30,7 @@ for f in friends:
         "%Y-%m-%d %H:%M:%S"
       )
       dt = datetime.datetime.strptime(
-        "2022-04-01 0:0:0",
+        "2022-01-01 0:0:0",
         "%Y-%m-%d %H:%M:%S"
       )
       if new_time < dt:

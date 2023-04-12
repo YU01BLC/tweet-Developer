@@ -45,6 +45,7 @@ def follow(keyword, add_count):
           'account_name': username,
         })
         follow_count += 1
+        time.sleep(3)
         if follow_count == fix_count:
           print(f'指定件数{fix_count}件の「フォロー」を実行しました。')
           print(f'実行件数{try_count}件: 「フォロー」件数{follow_count}件 / 「失敗」件数{error_count}件')
